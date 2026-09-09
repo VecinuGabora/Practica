@@ -11,3 +11,7 @@
 
 **Task curent:** Popularea catalogului si logica cosului cu persistența locala.
 **Implementare:** S-a adaugat baza de date falsă cu produse, randarea dinamica a cardurilor in DOM, gestionarea cantitatilor pe unitati de vanzare si s-a integrat `localStorage` pentru ca starea cosului sa supravietuiasca la un refresh de pagina.
+
+
+**Task curent:** Validarea pragului minim de comandă și cronometrul pentru livrare.
+**Implementare:** S-a implementat logica de verificare a pragului de 340 MDL (dacă subtotalul este mai mic, butonul de checkout este dezactivat și se afișează mesajul dinamic cu suma exactă lipsă). S-a adaugat si cronometrul bazat pe `setInterval` care scade secunda cu secunda pe ecranul de confirmare.

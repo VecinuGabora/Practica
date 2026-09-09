@@ -104,3 +104,6 @@ header {
 .cart-controls button:hover { background: #f1f2f6; }
 .cart-controls span { font-weight: 600; width: 25px; text-align: center; }
 .item-total { font-weight: 700; font-size: 18px; min-width: 80px; text-align: right; }
+
+
+.warning-alert { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-weight: 500; font-size: 14px; text-align: center; border: 1px solid #ffeeba; margin-top: 15px; line-height: 1.4; display: none; }

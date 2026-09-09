@@ -6,8 +6,10 @@ const products = [
     { id: 5, name: "Limonadă Fresh", desc: "Lămâi stoarse, miere, mentă", price: 50, unit: "500ml", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=500&q=80" }
 ];
 
+const MIN_ORDER_VALUE = 340;
 
-const screens = document.querySelectorAll('.screen'); //navigarea
+
+const screens = document.querySelectorAll('.screen');  //navigarea
 const navBtns = document.querySelectorAll('.nav-btn');
 
 function navigateTo(screenId) {
@@ -106,8 +108,60 @@ function renderCart() {
 
     document.getElementById('cart-count').innerText = totalItems;
     document.getElementById('cart-subtotal').innerText = subtotal;
+
+
+    const btnCheckout = document.getElementById('btn-checkout'); //min 340
+    let warningBox = document.getElementById('min-order-warning');
+
+    if (!warningBox && btnCheckout) {
+        warningBox = document.createElement('div');
+        warningBox.id = 'min-order-warning';
+        warningBox.className = 'warning-alert';
+        btnCheckout.parentNode.insertBefore(warningBox, btnCheckout);
+    }
+
+    if (subtotal > 0 && subtotal < MIN_ORDER_VALUE) {
+        const diff = MIN_ORDER_VALUE - subtotal;
+        warningBox.innerHTML = `⚠️ Mai ai nevoie de <strong>${diff} MDL</strong> ca să poți trimite comanda. Pragul minim este de ${MIN_ORDER_VALUE} MDL.`;
+        warningBox.style.display = 'block';
+        if(btnCheckout) {
+            btnCheckout.disabled = true;
+            btnCheckout.style.opacity = '0.5';
+            btnCheckout.style.cursor = 'not-allowed';
+        }
+    } else {
+        if(warningBox) warningBox.style.display = 'none';
+        if(btnCheckout) {
+            btnCheckout.disabled = (subtotal === 0);
+            btnCheckout.style.opacity = (subtotal === 0) ? '0.5' : '1';
+            btnCheckout.style.cursor = (subtotal === 0) ? 'not-allowed' : 'pointer';
+        }
+    }
+}
+
+
+function startTimer() {//timerul
+    const display = document.getElementById('timer-display');
+    if (!display) return;
+    let targetTime = new Date().getTime() + (2 * 60 * 60 * 1000) + (14 * 60 * 1000);
+
+    setInterval(() => {
+        let acum = new Date().getTime();
+        let diferenta = targetTime - acum;
+
+        if (diferenta > 0) {
+            let ore = Math.floor((diferenta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minute = Math.floor((diferenta % (1000 * 60 * 60)) / (1000 * 60));
+            let secunde = Math.floor((diferenta % (1000 * 60)) / 1000);
+
+            display.innerHTML = `Comandă în următoarele <strong>${ore}h ${minute}m ${secunde}s</strong> pentru livrare mâine.`;
+        } else {
+            display.innerHTML = "Timpul a expirat. Livrarea se va face poimâine.";
+        }
+    }, 1000);
 }
 
 window.navigateTo = navigateTo;
 renderCatalog();
 renderCart();
+startTimer();
