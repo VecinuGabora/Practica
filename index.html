@@ -3,11 +3,80 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flux Comandă Local</title>
+    <title>Bite&Bite | Comandă Online</title>
     <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+    <header>
+        <div class="logo">🍔 Bite<span>&</span>Bite</div>
+        <nav>
+            <button id="nav-catalog" class="nav-btn active-nav">Catalog</button>
+            <button id="nav-cart" class="nav-btn cart-btn">
+                Coș de cumpărături <span id="cart-count">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="catalog-screen" class="screen active"> <!--catalogul-->
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <h1>Gustul autentic,<br>livrat la ușa ta.</h1>
+                    <p>Preparate proaspete, gătite cu pasiune în fiecare zi.</p>
+                </div>
+            </div>
+            <div class="section-title">
+                <h2>Meniul Nostru</h2>
+            </div>
+            <div id="product-list">
+            </div>
+        </section>
+
+
+        <section id="cart-screen" class="screen"> <!--cosul-->
+            <div class="page-header">
+                <h2>Coșul tău</h2>
+                <p>Verifică produsele înainte de a plasa comanda.</p>
+            </div>
+            <div class="cart-layout">
+                <div id="cart-items" class="cart-items-list">
+                </div>
+                <div class="cart-sidebar">
+                    <div class="summary-box">
+                        <h3>Sumar Comandă</h3>
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span><span id="cart-subtotal">0</span> MDL</span>
+                        </div>
+                        <hr style="margin: 15px 0; border: none; border-top: 1px solid #dfe6e9;">
+                        <button id="btn-checkout" class="btn-primary block-btn">Mergi la Finalizare</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="checkout-screen" class="screen"> <!--confirmarea-->
+            <div class="page-header text-center">
+                <h2>Finalizare Comandă</h2>
+                <p>Aproape gata! Mai ai un singur pas.</p>
+            </div>
+            <div class="checkout-box">
+                <div class="timer-box">
+                    <span class="timer-icon">⏱️</span>
+                    <p id="timer-display">Cronometrul va porni la pasul 4</p>
+                </div>
+                <div class="action-buttons">
+                    <button id="btn-back-cart" class="btn-secondary">Înapoi la coș</button>
+                    <button id="btn-send-order" class="btn-primary">Confirmă Comanda</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
 <script type="module" src="/main.js"></script>
 </body>
 </html>
