@@ -1,0 +1,18 @@
+### Testare Inregistrare (Register)
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Adrian",
+  "email": "adrian@test.com",
+  "password": "parola-secreta"
+}
+
+### Testare Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "adrian@test.com",
+  "password": "parola-secreta"
+}
