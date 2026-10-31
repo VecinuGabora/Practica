@@ -1,0 +1,50 @@
+.navbar {
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    position: sticky; /* Rămâne lipit sus când faci scroll */
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: -0.05em; /* Un aspect mai modern și "compact" */
+}
+
+.navbar-logo span {
+    color: var(--color-accent); /* Punctul albastru de la finalul logo-ului */
+}
+
+.navbar-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-text-light);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+}
