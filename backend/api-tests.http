@@ -77,3 +77,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 
 ### 7. Obținere toate produsele
 GET http://localhost:5000/api/products
+
+### 8. Adăugare produs în Coș (Varianta ID = 1)
+POST http://localhost:5000/api/cart/add
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
+
+{
+  "product_variant_id": 1,
+  "quantity": 2
+}
+
+### 9. Adaugare inca o cantitate peste STOCUL MAXIM (Test de eroare)
+POST http://localhost:5000/api/cart/add
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
+
+{
+  "product_variant_id": 1,
+  "quantity": 20
+}
+
+### 10. Vizualizare Coș
+GET http://localhost:5000/api/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
