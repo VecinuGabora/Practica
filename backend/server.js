@@ -7,7 +7,8 @@ import db from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
-import cartRoutes from './routes/cartRoutes.js'; // IMPORT NOU
+import cartRoutes from './routes/cartRoutes.js';
+import orderRoutes from './routes/orderRoutes.js'; // IMPORT NOU
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/cart', cartRoutes); // RUTĂ NOUĂ
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes); // RUTĂ NOUĂ
 
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Salut din backend! Serverul functioneaza corect.' });

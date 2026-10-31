@@ -101,3 +101,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 ### 10. Vizualizare Coș
 GET http://localhost:5000/api/cart
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
+
+
+### 11. Adaugare Adresă de Livrare
+POST http://localhost:5000/api/orders/address
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
+
+{
+  "street": "Strada Studentilor 1",
+  "city": "Chisinau",
+  "zip_code": "MD-2045",
+  "country": "Moldova"
+}
+
+### 12. Plasare Comandă (Folosind Adresa cu ID=1)
+POST http://localhost:5000/api/orders
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg3OTgwLCJleHAiOjE3OTM1NzQzODB9.YeyLpNetI-MAnnj2Bm8cSKNC4TOTaLNsbZpoh1l-B0Y
+
+{
+  "shipping_address_id": 1
+}
