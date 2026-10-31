@@ -16,3 +16,64 @@ Content-Type: application/json
   "email": "adrian@test.com",
   "password": "parola-secreta"
 }
+
+
+
+### 3. Creare Categorie fara Token (Trebuie sa dea EROARE)
+POST http://localhost:5000/api/categories
+Content-Type: application/json
+
+{
+  "name": "Tricouri",
+  "slug": "tricouri"
+}
+
+### 4. Creare Categorie cu Token de Admin
+POST http://localhost:5000/api/categories
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg2NzQ4LCJleHAiOjE3OTM1NzMxNDh9.CJd1FAOXtunueMUm5Zh7gyNEaryAV0yYAwZ5Xddsckg
+
+{
+  "name": "Geci de Iarna",
+  "slug": "geci-de-iarna"
+}
+
+### 5. Obtinere toate categoriile (Public)
+GET http://localhost:5000/api/categories
+
+
+
+### 6. Creare Produs (Cu Variante - Mărimi și Culori)
+POST http://localhost:5000/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNDg2NzQ4LCJleHAiOjE3OTM1NzMxNDh9.CJd1FAOXtunueMUm5Zh7gyNEaryAV0yYAwZ5Xddsckg
+
+{
+  "category_id": 1,
+  "name": "Tricou Polo Clasic",
+  "description": "Tricou 100% bumbac, ideal pentru vară.",
+  "base_price": 120.00,
+  "variants": [
+    {
+      "size": "M",
+      "color": "Albastru",
+      "stock": 10,
+      "sku": "POLO-ALB-M"
+    },
+    {
+      "size": "L",
+      "color": "Albastru",
+      "stock": 5,
+      "sku": "POLO-ALB-L"
+    },
+    {
+      "size": "M",
+      "color": "Negru",
+      "stock": 15,
+      "sku": "POLO-NEG-M"
+    }
+  ]
+}
+
+### 7. Obținere toate produsele
+GET http://localhost:5000/api/products

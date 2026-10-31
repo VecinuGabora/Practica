@@ -5,6 +5,8 @@ import db from './config/db.js';
 
 // Importăm rutele
 import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import productRoutes from './routes/productRoutes.js'; // IMPORT NOU
 
 dotenv.config();
 
@@ -13,8 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Setăm URL-ul de bază pentru rutele de autentificare
+// Setăm URL-urile de bază
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes); // RUTĂ NOUĂ
 
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Salut din backend! Serverul functioneaza corect.' });
