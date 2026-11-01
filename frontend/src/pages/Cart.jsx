@@ -4,11 +4,9 @@ import { useAuth } from '../hooks/useAuth.js';
 import '../styles/Cart.css';
 
 const Cart = () => {
-    // Extragem datele coșului din memoria globală
     const { cartItems, cartTotal } = useCart();
     const { user } = useAuth();
 
-    // Dacă utilizatorul nu este logat, îi spunem să se autentifice
     if (!user) {
         return (
             <div className="cart-empty">
@@ -19,7 +17,6 @@ const Cart = () => {
         );
     }
 
-    // Dacă este logat, dar coșul e gol
     if (cartItems.length === 0) {
         return (
             <div className="cart-empty">
@@ -30,13 +27,11 @@ const Cart = () => {
         );
     }
 
-    // Dacă are produse în coș, afișăm interfața completă
     return (
         <div className="cart-container">
             <h1 className="cart-title">Coșul tău</h1>
 
             <div className="cart-content">
-                {/* Partea stângă: Lista de produse */}
                 <div className="cart-items">
                     {cartItems.map((item) => (
                         <div key={item.cart_item_id} className="cart-item-card">
@@ -55,7 +50,6 @@ const Cart = () => {
                     ))}
                 </div>
 
-                {/* Partea dreaptă: Sumarul comenzii */}
                 <div className="cart-summary">
                     <h3>Sumar Comandă</h3>
                     <div className="summary-row">
@@ -67,13 +61,17 @@ const Cart = () => {
                         <span>Gratuită</span>
                     </div>
                     <div className="summary-divider"></div>
+
                     <div className="summary-row total">
                         <span>Total:</span>
                         <span>{cartTotal} MDL</span>
                     </div>
-                    <button className="btn btn-primary checkout-btn">
+
+                    {/* AICI ESTE BUTONUL NOU, CARE TE DUCE LA PAGINA DE CHECKOUT */}
+                    <Link to="/checkout" className="btn btn-primary checkout-btn" style={{ display: 'block', textAlign: 'center', boxSizing: 'border-box' }}>
                         Finalizează Comanda
-                    </button>
+                    </Link>
+
                 </div>
             </div>
         </div>

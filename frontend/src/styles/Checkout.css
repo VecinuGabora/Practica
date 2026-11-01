@@ -1,0 +1,53 @@
+.checkout-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 0;
+}
+
+.checkout-card {
+    background: var(--color-surface);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 500px;
+}
+
+.checkout-card h2 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.checkout-subtitle {
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.checkout-subtitle strong {
+    color: var(--color-accent);
+}
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1; /* Împarte spațiul în mod egal pe același rând */
+}
+
+.checkout-submit-btn {
+    margin-top: 1rem;
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
