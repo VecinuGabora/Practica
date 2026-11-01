@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
-import './styles/global.css'; // Importăm designul nostru frumos
+import { AuthProvider } from './context/AuthContext.jsx'; // IMPORT NOU
+import './styles/global.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        {/* BrowserRouter învelește aplicația pentru a permite navigarea prin link-uri */}
         <BrowserRouter>
-            <App />
+            {/* AuthProvider pune memoria de login la dispoziția întregii aplicații */}
+            <AuthProvider>
+                <App />
+            </AuthProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
