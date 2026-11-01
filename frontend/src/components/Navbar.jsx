@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth.js'; // Importăm Hook-ul nostru
+import { useAuth } from '../hooks/useAuth.js';
+import { useCart } from '../hooks/useCart.js'; // IMPORT NOU
 import '../styles/Navbar.css';
 
 const Navbar = () => {
-    // Extragem starea utilizatorului și funcția de logout din memorie
     const { user, logoutAction } = useAuth();
+    const { cartItems } = useCart(); // Luăm itemele din coș din memorie
+
+    // Calculăm numărul total de BUCĂȚI (nu doar feluri de produse)
+    const totalItemsInCart = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     return (
         <header className="navbar">
@@ -19,7 +23,6 @@ const Navbar = () => {
                 </nav>
 
                 <div className="navbar-actions">
-                    {/* Logica: Dacă avem user, afișăm numele și Delogare. Dacă nu, afișăm Autentificare */}
                     {user ? (
                         <>
                             <span className="nav-link" style={{color: 'var(--color-primary)'}}>
@@ -33,7 +36,8 @@ const Navbar = () => {
                         <Link to="/login" className="nav-link">Autentificare</Link>
                     )}
 
-                    <Link to="/cos" className="btn btn-primary">Coș (0)</Link>
+                    {/* AICI ESTE MAGIA: {totalItemsInCart} se va schimba dinamic */}
+                    <Link to="/cos" className="btn btn-primary">Coș ({totalItemsInCart})</Link>
                 </div>
             </div>
         </header>
