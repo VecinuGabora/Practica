@@ -8,7 +8,8 @@ import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
-import orderRoutes from './routes/orderRoutes.js'; // IMPORT NOU
+import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js'; // IMPORT NOU PENTRU POZE
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
-app.use('/api/orders', orderRoutes); // RUTĂ NOUĂ
+app.use('/api/orders', orderRoutes);
+app.use('/api/upload', uploadRoutes); // RUTĂ NOUĂ PENTRU POZE
 
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Salut din backend! Serverul functioneaza corect.' });

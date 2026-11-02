@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '../services/api.js';
-import { useCart } from '../hooks/useCart.js'; // Importăm funcția pentru coș
+import { useCart } from '../hooks/useCart.js';
 import '../styles/Shop.css';
 
 const Shop = () => {
@@ -8,7 +8,6 @@ const Shop = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Extragem funcția de adăugare în coș din contextul global
     const { addToCart } = useCart();
 
     useEffect(() => {
@@ -40,7 +39,15 @@ const Shop = () => {
                 <div className="products-grid">
                     {products.map((product) => (
                         <div key={product.id} className="product-card">
-                            <div className="product-image-placeholder">Fără Imagine</div>
+
+                            {/* AICI ESTE MODIFICAREA: Dacă avem imagine o afișăm, dacă nu, afișăm "Fără Imagine" */}
+                            {product.image_url ? (
+                                <div className="product-image-container">
+                                    <img src={product.image_url} alt={product.name} className="product-image" />
+                                </div>
+                            ) : (
+                                <div className="product-image-placeholder">Fără Imagine</div>
+                            )}
 
                             <div className="product-details">
                                 <h3 className="product-name">{product.name}</h3>
@@ -48,7 +55,6 @@ const Shop = () => {
                                 <div className="product-bottom">
                                     <span className="product-price">{product.base_price} MDL</span>
 
-                                    {/* Aici am înlocuit butonul "Detalii" cu cel de "Adaugă în coș" */}
                                     <button
                                         className="btn btn-primary btn-sm"
                                         onClick={() => addToCart(1, 1)}

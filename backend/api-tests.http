@@ -123,3 +123,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 {
   "shipping_address_id": 1
 }
+
+### 13. Încărcare Poză pentru Produs (ID-ul 1)
+POST http://localhost:5000/api/upload
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkzNjQ4MDIxLCJleHAiOjE3OTM3MzQ0MjF9.n831bU7TBE7qMJZa1aCn_CrOyRX0z4z7Ap5hbctA2lU
+Content-Type: multipart/form-data; boundary=boundary1234
+
+--boundary1234
+Content-Disposition: form-data; name="product_id"
+
+1
+--boundary1234
+Content-Disposition: form-data; name="is_primary"
+
+true
+--boundary1234
+Content-Disposition: form-data; name="image"; filename="tricou.jpg"
+Content-Type: image/jpeg
+
+< ./tricou.jpg
+--boundary1234--
+

@@ -53,11 +53,15 @@ export const createProduct = async (req, res) => {
 // 2. Obținerea tuturor produselor (Public)
 export const getProducts = async (req, res) => {
     try {
-        // Luăm produsele simple deocamdată (mai târziu vom adăuga și imaginile aici)
-        const [products] = await db.query('SELECT * FROM products');
+        // Folosim LEFT JOIN pentru a lipi link-ul imaginii de detaliile produsului
+        const [products] = await db.query(`
+            SELECT p.*, pi.image_url 
+            FROM products p
+            LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+        `);
         res.status(200).json(products);
     } catch (error) {
-        console.error('[PRODUCT ERROR]', error);
-        res.status(500).json({ message: 'Eroare la obținerea produselor' });
+        console.error("Eroare la preluarea produselor:", error);
+        res.status(500).json({ message: 'Eroare la preluarea produselor' });
     }
 };
