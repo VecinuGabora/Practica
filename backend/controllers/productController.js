@@ -1,29 +1,24 @@
 import db from '../config/db.js';
 
-// 1. Crearea unui produs cu tot cu variantele sale (Doar Admin)
+// 1. Crearea unui produs cu tot cu variantele sale (Admin)
 export const createProduct = async (req, res) => {
-    // Extragem datele din cerere
     const { category_id, name, description, base_price, variants } = req.body;
 
     if (!name || !base_price || !variants || variants.length === 0) {
         return res.status(400).json({ message: 'Numele, prețul și cel puțin o variantă sunt obligatorii!' });
     }
 
-    // Cerem o conexiune separată pentru a putea face o Tranzacție
     const connection = await db.getConnection();
 
     try {
-        // Începem Tranzacția
         await connection.beginTransaction();
 
-        // 1. Inserăm produsul de bază în tabelul `products`
         const [productResult] = await connection.query(
             'INSERT INTO products (category_id, name, description, base_price) VALUES (?, ?, ?, ?)',
             [category_id, name, description, base_price]
         );
         const newProductId = productResult.insertId;
 
-        // 2. Inserăm fiecare variantă în tabelul `product_variants`
         for (const variant of variants) {
             await connection.query(
                 'INSERT INTO product_variants (product_id, size, color, stock, sku) VALUES (?, ?, ?, ?, ?)',
@@ -31,21 +26,17 @@ export const createProduct = async (req, res) => {
             );
         }
 
-        // Dacă totul a mers bine, Salvăm Definitiv (Commit)
         await connection.commit();
         res.status(201).json({ message: 'Produsul și variantele au fost create cu succes!', productId: newProductId });
 
     } catch (error) {
-        // Dacă a apărut vreo eroare, Anulăm Tot (Rollback) ca să nu avem date incomplete
         await connection.rollback();
-
         if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ message: 'Eroare: Un SKU (cod de bare) introdus există deja la alt produs!' });
+            return res.status(400).json({ message: 'Eroare: Un SKU (cod de bare) introdus există deja!' });
         }
         console.error('[PRODUCT ERROR]', error);
         res.status(500).json({ message: 'Eroare la crearea produsului.' });
     } finally {
-        // Eliberăm conexiunea înapoi în "piscină" ca să poată fi folosită de alți clienți
         connection.release();
     }
 };
@@ -53,7 +44,6 @@ export const createProduct = async (req, res) => {
 // 2. Obținerea tuturor produselor (Public)
 export const getProducts = async (req, res) => {
     try {
-        // Folosim LEFT JOIN pentru a lipi link-ul imaginii de detaliile produsului
         const [products] = await db.query(`
             SELECT p.*, pi.image_url 
             FROM products p
@@ -63,5 +53,32 @@ export const getProducts = async (req, res) => {
     } catch (error) {
         console.error("Eroare la preluarea produselor:", error);
         res.status(500).json({ message: 'Eroare la preluarea produselor' });
+    }
+};
+
+// 3. Ștergerea unui produs (Admin) - NOU
+export const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // Trebuie să ștergem întâi "copiii" (imaginile și variantele) pentru a nu bloca baza de date
+        await connection.query('DELETE FROM product_images WHERE product_id = ?', [id]);
+        await connection.query('DELETE FROM product_variants WHERE product_id = ?', [id]);
+
+        // La final ștergem "părintele" (produsul)
+        await connection.query('DELETE FROM products WHERE id = ?', [id]);
+
+        await connection.commit();
+        res.status(200).json({ message: 'Produs șters cu succes!' });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error("Eroare la stergere:", error);
+        res.status(500).json({ message: 'Eroare la ștergerea produsului.' });
+    } finally {
+        connection.release();
     }
 };
