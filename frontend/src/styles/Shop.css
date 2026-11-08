@@ -108,3 +108,121 @@
 .product-card:hover .product-image {
     transform: scale(1.05);
 }
+
+
+.shop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.shop-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.shop-header h1 {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.shop-header p {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+/* Grila de produse (Responsive) */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+/* Cardul unui produs */
+.product-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Imaginea produsului */
+.product-image-container {
+    width: 100%;
+    aspect-ratio: 4/5; /* Proporție clasică pentru haine */
+    background-color: #f3f4f6;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05); /* Efect de zoom fin la trecerea cu mouse-ul */
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+/* Informațiile de sub imagine */
+.product-info {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+    flex-grow: 1; /* Împinge butonul la baza cardului */
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: var(--radius);
+}
+
+/* Stări de încărcare și eroare */
+.shop-loader, .shop-error, .no-products {
+    text-align: center;
+    padding: 5rem 0;
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+.shop-error {
+    color: #ef4444;
+}

@@ -41,11 +41,15 @@ export const createProduct = async (req, res) => {
     }
 };
 
-// 2. Obținerea tuturor produselor (Public)
+// 2. Obținerea tuturor produselor (Public) - AICI AM REPARAT
 export const getProducts = async (req, res) => {
     try {
+        // Am adăugat un sub-query care extrage ID-ul primei variante a produsului
         const [products] = await db.query(`
-            SELECT p.*, pi.image_url 
+            SELECT 
+                p.*, 
+                pi.image_url,
+                (SELECT id FROM product_variants WHERE product_id = p.id LIMIT 1) AS variant_id
             FROM products p
             LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
         `);
@@ -56,7 +60,7 @@ export const getProducts = async (req, res) => {
     }
 };
 
-// 3. Ștergerea unui produs (Admin) - NOU
+// 3. Ștergerea unui produs (Admin)
 export const deleteProduct = async (req, res) => {
     const { id } = req.params;
     const connection = await db.getConnection();
@@ -64,11 +68,8 @@ export const deleteProduct = async (req, res) => {
     try {
         await connection.beginTransaction();
 
-        // Trebuie să ștergem întâi "copiii" (imaginile și variantele) pentru a nu bloca baza de date
         await connection.query('DELETE FROM product_images WHERE product_id = ?', [id]);
         await connection.query('DELETE FROM product_variants WHERE product_id = ?', [id]);
-
-        // La final ștergem "părintele" (produsul)
         await connection.query('DELETE FROM products WHERE id = ?', [id]);
 
         await connection.commit();

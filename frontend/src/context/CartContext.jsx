@@ -1,59 +1,56 @@
 import { createContext, useState, useEffect } from 'react';
 import API from '../services/api.js';
-import { useAuth } from '../hooks/useAuth.js'; // Avem nevoie de auth pentru a ști dacă userul e logat
+import { useAuth } from '../hooks/useAuth.js';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-    const { token } = useAuth(); // Extragem token-ul din sistemul de auth
     const [cartItems, setCartItems] = useState([]);
-    const [cartTotal, setCartTotal] = useState(0);
+    const { user } = useAuth();
 
-    // Funcția care aduce coșul din backend
-    const fetchCart = async () => {
-        if (!token) {
-            // Dacă userul dă logout, golim coșul vizual
+    // Aducem coșul din baza de date la logare
+    useEffect(() => {
+        if (user) {
+            fetchCart();
+        } else {
             setCartItems([]);
-            setCartTotal(0);
-            return;
         }
+    }, [user]);
 
+    const fetchCart = async () => {
         try {
             const response = await API.get('/cart');
-            setCartItems(response.data.items);
-            setCartTotal(response.data.cartTotal);
+            // Backend-ul tău întoarce { items: [...], cartTotal: ... }
+            setCartItems(response.data.items || []);
         } catch (error) {
-            console.error('Eroare la încărcarea coșului:', error);
+            console.error("Eroare la aducerea coșului:", error);
         }
     };
 
-    // Apelăm fetchCart de fiecare dată când se schimbă token-ul (la login/logout)
-    useEffect(() => {
-        fetchCart();
-    }, [token]);
-
-    // Funcția pentru adăugarea în coș (va fi apelată de pe pagina de Magazin)
-    const addToCart = async (productVariantId, quantity = 1) => {
-        if (!token) {
-            alert('Te rugăm să te autentifici pentru a adăuga produse în coș!');
+    const addToCart = async (product, quantity = 1) => {
+        if (!user) {
+            alert("Trebuie să fii logat pentru a adăuga în coș!");
             return;
         }
 
         try {
+            // AICI ESTE REPARAȚIA: Trimitem product_variant_id exact cum cere backend-ul tău!
             await API.post('/cart/add', {
-                product_variant_id: productVariantId,
+                product_variant_id: product.variant_id || product.variantId,
                 quantity: quantity
             });
-            // După ce adăugarea e gata în backend, reîncărcăm coșul ca să actualizăm numărul de pe Navbar
-            await fetchCart();
-            alert('Produs adăugat în coș cu succes!');
+
+            // După ce l-am salvat în MySQL, cerem noul coș ca să se actualizeze pe ecran
+            fetchCart();
+
         } catch (error) {
-            alert(error.response?.data?.message || 'Eroare la adăugarea în coș');
+            console.error("Eroare la adăugarea în coș:", error);
+            alert(error.response?.data?.message || "Eroare la adăugarea în coș");
         }
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, cartTotal, addToCart, fetchCart }}>
+        <CartContext.Provider value={{ cartItems, addToCart, fetchCart }}>
             {children}
         </CartContext.Provider>
     );

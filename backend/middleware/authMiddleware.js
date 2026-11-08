@@ -1,41 +1,48 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import db from '../config/db.js';
 
-dotenv.config();
+// 1. PAZNICUL DE BAZĂ: Verifică dacă utilizatorul are un Token (dacă este logat)
+export const protect = async (req, res, next) => {
+    let token;
 
-// 1. Verificăm dacă utilizatorul este logat (are token)
-export const verifyToken = (req, res, next) => {
-    // Extragem token-ul din header-ul "Authorization: Bearer <token>"
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Acces interzis! Nu ești autentificat.' });
-    }
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            // Extragem token-ul (tăiem cuvântul 'Bearer ')
+            token = req.headers.authorization.split(' ')[1];
 
-    const token = authHeader.split(' ')[1];
+            // Verificăm dacă token-ul este valid și n-a expirat
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    try {
-        // Verificăm dacă token-ul este valid și nu a expirat
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            // Aducem datele utilizatorului din baza de date (fără parolă)
+            const [users] = await db.query('SELECT id, name, email, role FROM users WHERE id = ?', [decoded.id]);
 
-        // Atașăm datele utilizatorului (id, role) la obiectul de request (req)
-        req.user = decoded;
+            if (users.length === 0) {
+                return res.status(401).json({ message: 'Neautorizat: Utilizatorul nu mai există!' });
+            }
 
-        // Trecem mai departe către funcția următoare (controller)
-        next();
-    } catch (error) {
-        return res.status(403).json({ message: 'Token invalid sau expirat!' });
+            // Punem datele în req.user ca să le poată folosi următoarele funcții
+            req.user = users[0];
+            next(); // Dăm voie mai departe
+        } catch (error) {
+            console.error("Eroare la token:", error);
+            res.status(401).json({ message: 'Neautorizat: Token invalid sau expirat!' });
+        }
+    } else {
+        res.status(401).json({ message: 'Neautorizat: Nu există niciun token!' });
     }
 };
 
-// 2. Verificăm dacă utilizatorul are rol de administrator
-export const isAdmin = (req, res, next) => {
-    if (!req.user) {
-        return res.status(401).json({ message: 'Autentificare necesară!' });
+// 2. PAZNICUL ȘEF: Verifică dacă utilizatorul logat are rolul de 'admin'
+export const admin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next(); // Ești admin, treci mai departe!
+    } else {
+        res.status(403).json({ message: 'Acces interzis: Doar administratorii pot face asta!' });
     }
-
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Acces respins! Doar administratorii pot face asta.' });
-    }
-
-    next();
 };
+
+// ==========================================
+// ALIASURI (Pentru compatibilitate cu rutele care folosesc numele vechi)
+// ==========================================
+export const verifyToken = protect;
+export const isAdmin = admin;
