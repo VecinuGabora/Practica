@@ -1,12 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
+import Home from './pages/Home.jsx'; // IMPORTUL PENTRU PAGINA ACASĂ
 import Shop from './pages/Shop.jsx';
 import Login from './pages/Login.jsx';
 import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
 import AdminDashboard from './pages/Admin/Dashboard.jsx';
 import AddProduct from './pages/Admin/AddProduct.jsx';
-import ManageProducts from './pages/Admin/ManageProducts.jsx'; // IMPORT NOU
+import ManageProducts from './pages/Admin/ManageProducts.jsx';
 
 function App() {
     return (
@@ -14,7 +15,9 @@ function App() {
             <Navbar />
             <main className="main-content">
                 <Routes>
-                    <Route path="/" element={<h2>Pagina Principală (Acasă) - În curând</h2>} />
+                    {/* AICI AM ÎNLOCUIT TEXTUL CU COMPONENTA HOME */}
+                    <Route path="/" element={<Home />} />
+
                     <Route path="/magazin" element={<Shop />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/cos" element={<Cart />} />
@@ -24,7 +27,7 @@ function App() {
                     <Route path="/admin" element={<AdminDashboard />}>
                         <Route index element={<h2>Bine ai venit în Panoul de Administrare! Selectează o opțiune din meniul din stânga.</h2>} />
 
-                        {/* MODIFICARE AICI: Acum încărcăm tabelul real de gestionare produse */}
+                        {/* Tabelul real de gestionare produse */}
                         <Route path="produse" element={<ManageProducts />} />
 
                         <Route path="adauga-produs" element={<AddProduct />} />

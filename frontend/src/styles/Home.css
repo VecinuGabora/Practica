@@ -1,0 +1,169 @@
+/* Containerul principal - Dark Mode Premium */
+.home-premium-container {
+    background-color: #0a0a0c;
+    color: #e2e8f0;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    padding-bottom: 5rem;
+}
+
+/* 1. Secțiunea Hero - Cinematică și impunătoare */
+.hero-premium {
+    position: relative;
+    height: 85vh;
+    min-height: 600px;
+    /* Gradient care face tranziția fină spre negru la bază */
+    background-image: linear-gradient(to bottom, rgba(10, 10, 12, 0.3) 0%, rgba(10, 10, 12, 1) 100%),
+    url('https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=2000&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center top;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.hero-premium-title {
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    animation: fadeInDown 1s ease-out;
+}
+
+.hero-premium-subtitle {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    max-width: 600px;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    animation: fadeInUp 1s ease-out 0.3s;
+    animation-fill-mode: both;
+}
+
+.hero-btn-premium {
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 1.2rem 3.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    text-decoration: none;
+    animation: fadeInUp 1s ease-out 0.6s;
+    animation-fill-mode: both;
+}
+
+.hero-btn-premium:hover {
+    background: #ffffff;
+    color: #0a0a0c;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+/* 2. Funcționalitățile - Carduri Dark Carbon */
+.features-premium-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    max-width: 1300px;
+    margin: -3rem auto 5rem auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.premium-card {
+    background: #131316;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 3rem 2rem;
+    text-align: left;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.premium-card:hover {
+    background: #1a1a1f;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.premium-icon {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.premium-card h3 {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.premium-card p {
+    font-size: 0.9rem;
+    color: #8aa1b1;
+    line-height: 1.7;
+}
+
+/* 3. Recomandări */
+.home-recs-premium {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.premium-section-title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-left: 4px solid #ffffff;
+    padding-left: 1rem;
+}
+
+/* Ajustare estetică pentru componenta ta existentă de recomandări pusă pe fundal negru */
+.home-recs-premium h3 {
+    display: none; /* Ascundem titlul vechi al componentei */
+}
+.home-recs-premium div[style*="background: var(--color-surface)"] {
+    background: #131316 !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    color: white !important;
+}
+.home-recs-premium h4 {
+    color: #fff !important;
+}
+
+/* Animații CSS */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .hero-premium-title { font-size: 3rem; }
+    .features-premium-grid { margin-top: 2rem; }
+}

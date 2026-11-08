@@ -2,10 +2,7 @@ import db from '../config/db.js';
 
 // 1. Adăugarea unui produs în coș
 export const addToCart = async (req, res) => {
-    // Extragem ID-ul utilizatorului din token (din middleware-ul de auth)
     const userId = req.user.id;
-
-    // Extragem din request ID-ul variantei (ex: Tricoul Mărimea M Albastru) și cantitatea
     const { product_variant_id, quantity } = req.body;
 
     if (!product_variant_id || !quantity) {
@@ -13,7 +10,6 @@ export const addToCart = async (req, res) => {
     }
 
     try {
-        // 1. Verificăm dacă există stoc suficient pentru varianta cerută
         const [variants] = await db.query('SELECT stock FROM product_variants WHERE id = ?', [product_variant_id]);
         if (variants.length === 0) {
             return res.status(404).json({ message: 'Această variantă de produs nu a fost găsită!' });
@@ -23,29 +19,24 @@ export const addToCart = async (req, res) => {
             return res.status(400).json({ message: `Stoc insuficient! Mai sunt doar ${variants[0].stock} bucăți disponibile.` });
         }
 
-        // 2. Găsim coșul utilizatorului (sau îi creăm unul nou dacă nu are)
         let [carts] = await db.query('SELECT id FROM carts WHERE user_id = ?', [userId]);
         let cartId;
 
         if (carts.length === 0) {
-            // Utilizatorul nu are coș, creăm unul
             const [newCart] = await db.query('INSERT INTO carts (user_id) VALUES (?)', [userId]);
             cartId = newCart.insertId;
         } else {
             cartId = carts[0].id;
         }
 
-        // 3. Verificăm dacă produsul este deja în coș
         const [existingItem] = await db.query(
             'SELECT id, quantity FROM cart_items WHERE cart_id = ? AND product_variant_id = ?',
             [cartId, product_variant_id]
         );
 
         if (existingItem.length > 0) {
-            // Produsul e deja în coș, doar îi creștem cantitatea
             const newQuantity = existingItem[0].quantity + quantity;
 
-            // Verificăm iar stocul maxim
             if (variants[0].stock < newQuantity) {
                 return res.status(400).json({ message: `Stoc insuficient pentru cantitatea totală cerută.` });
             }
@@ -55,7 +46,6 @@ export const addToCart = async (req, res) => {
                 [newQuantity, existingItem[0].id]
             );
         } else {
-            // Produsul nu e în coș, îl adăugăm ca un rând nou
             await db.query(
                 'INSERT INTO cart_items (cart_id, product_variant_id, quantity) VALUES (?, ?, ?)',
                 [cartId, product_variant_id, quantity]
@@ -75,7 +65,6 @@ export const getCart = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // Folosim un JOIN complex pentru a aduce numele produsului, prețul, mărimea și cantitatea dorită
         const query = `
             SELECT 
                 ci.id AS cart_item_id,
@@ -94,7 +83,6 @@ export const getCart = async (req, res) => {
 
         const [items] = await db.query(query, [userId]);
 
-        // Calculăm și totalul general al coșului direct din JavaScript
         const cartTotal = items.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0);
 
         res.status(200).json({
@@ -105,5 +93,25 @@ export const getCart = async (req, res) => {
     } catch (error) {
         console.error('[CART ERROR]', error);
         res.status(500).json({ message: 'Eroare la vizualizarea coșului.' });
+    }
+};
+
+// 3. Ștergerea unui produs din coș (FUNCȚIA NOUĂ)
+export const removeFromCart = async (req, res) => {
+    const { id } = req.params; // ID-ul rândului din cart_items
+    const userId = req.user.id;
+
+    try {
+        // Verificăm dacă acel coș îi aparține userului logat
+        const [cart] = await db.query('SELECT id FROM carts WHERE user_id = ?', [userId]);
+        if (cart.length === 0) return res.status(404).json({ message: 'Coșul nu a fost găsit.' });
+
+        // Ștergem produsul din coș
+        await db.query('DELETE FROM cart_items WHERE id = ? AND cart_id = ?', [id, cart[0].id]);
+
+        res.status(200).json({ message: 'Produs eliminat cu succes!' });
+    } catch (error) {
+        console.error('[CART ERROR]', error);
+        res.status(500).json({ message: 'Eroare la ștergerea produsului.' });
     }
 };

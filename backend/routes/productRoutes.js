@@ -1,13 +1,14 @@
 import express from 'express';
-import { createProduct, getProducts, deleteProduct } from '../controllers/productController.js';
+import { createProduct, getProducts, deleteProduct, getRecommendedProducts } from '../controllers/productController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// 1. Oricine poate vedea produsele (ruta publică)
-router.get('/', getProducts);
+// Ruta pentru recomandări (trebuie să fie prima)
+router.get('/recommended', getRecommendedProducts);
 
-// 2. DOAR Adminii logați pot adăuga sau șterge produse (rute protejate)
+// Rutele existente
+router.get('/', getProducts);
 router.post('/', protect, admin, createProduct);
 router.delete('/:id', protect, admin, deleteProduct);
 

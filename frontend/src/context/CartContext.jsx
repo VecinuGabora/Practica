@@ -6,22 +6,23 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [cartTotal, setCartTotal] = useState(0);
     const { user } = useAuth();
 
-    // Aducem coșul din baza de date la logare
     useEffect(() => {
         if (user) {
             fetchCart();
         } else {
             setCartItems([]);
+            setCartTotal(0);
         }
     }, [user]);
 
     const fetchCart = async () => {
         try {
             const response = await API.get('/cart');
-            // Backend-ul tău întoarce { items: [...], cartTotal: ... }
             setCartItems(response.data.items || []);
+            setCartTotal(response.data.cartTotal || 0);
         } catch (error) {
             console.error("Eroare la aducerea coșului:", error);
         }
@@ -34,23 +35,29 @@ export const CartProvider = ({ children }) => {
         }
 
         try {
-            // AICI ESTE REPARAȚIA: Trimitem product_variant_id exact cum cere backend-ul tău!
             await API.post('/cart/add', {
                 product_variant_id: product.variant_id || product.variantId,
                 quantity: quantity
             });
-
-            // După ce l-am salvat în MySQL, cerem noul coș ca să se actualizeze pe ecran
             fetchCart();
-
         } catch (error) {
             console.error("Eroare la adăugarea în coș:", error);
             alert(error.response?.data?.message || "Eroare la adăugarea în coș");
         }
     };
 
+    // FUNCȚIA NOUĂ DE ȘTERGERE
+    const removeFromCart = async (cartItemId) => {
+        try {
+            await API.delete(`/cart/remove/${cartItemId}`);
+            fetchCart(); // Cerem iar coșul de la server ca să se actualizeze ecranul și totalul
+        } catch (error) {
+            console.error("Eroare la stergerea din cos:", error);
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, fetchCart }}>
+        <CartContext.Provider value={{ cartItems, cartTotal, addToCart, fetchCart, removeFromCart }}>
             {children}
         </CartContext.Provider>
     );

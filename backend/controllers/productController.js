@@ -1,6 +1,6 @@
 import db from '../config/db.js';
 
-// 1. Crearea unui produs cu tot cu variantele sale (Admin)
+// 1. Crearea unui produs (Admin)
 export const createProduct = async (req, res) => {
     const { category_id, name, description, base_price, variants } = req.body;
 
@@ -41,10 +41,9 @@ export const createProduct = async (req, res) => {
     }
 };
 
-// 2. Obținerea tuturor produselor (Public) - AICI AM REPARAT
+// 2. Obținerea tuturor produselor (Public)
 export const getProducts = async (req, res) => {
     try {
-        // Am adăugat un sub-query care extrage ID-ul primei variante a produsului
         const [products] = await db.query(`
             SELECT 
                 p.*, 
@@ -81,5 +80,32 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ message: 'Eroare la ștergerea produsului.' });
     } finally {
         connection.release();
+    }
+};
+
+// 4. Algoritm local pentru Recomandări (NOU și REPARAT)
+export const getRecommendedProducts = async (req, res) => {
+    try {
+        // Folosim ANY_VALUE() pentru a respecta regula only_full_group_by a MySQL
+        const [recommended] = await db.query(`
+            SELECT 
+                p.id, 
+                p.name, 
+                p.base_price, 
+                p.description,
+                ANY_VALUE(pi.image_url) AS image_url,
+                ANY_VALUE(pv.id) AS variant_id
+            FROM products p
+            LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+            JOIN product_variants pv ON p.id = pv.product_id
+            WHERE pv.stock > 0
+            GROUP BY p.id, p.name, p.base_price, p.description
+            ORDER BY RAND()
+            LIMIT 4
+        `);
+        res.status(200).json(recommended);
+    } catch (error) {
+        console.error("Eroare la aducerea recomandarilor:", error);
+        res.status(500).json({ message: 'Eroare la generarea recomandarilor' });
     }
 };

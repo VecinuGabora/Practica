@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart.js';
 import { useAuth } from '../hooks/useAuth.js';
+import RecommendedProducts from '../components/RecommendedProducts.jsx'; // IMPORT NOU
 import '../styles/Cart.css';
 
 const Cart = () => {
-    const { cartItems, cartTotal } = useCart();
+    const { cartItems, cartTotal, removeFromCart } = useCart();
     const { user } = useAuth();
 
     if (!user) {
@@ -41,6 +42,23 @@ const Cart = () => {
                                 <p className="cart-item-variant">Mărime: {item.size} | Culoare: {item.color}</p>
                                 <div className="cart-item-actions">
                                     <span className="cart-item-quantity">Cantitate: {item.quantity}</span>
+
+                                    <button
+                                        onClick={() => removeFromCart(item.cart_item_id)}
+                                        style={{
+                                            display: 'block',
+                                            color: '#ef4444',
+                                            background: 'none',
+                                            border: 'none',
+                                            padding: 0,
+                                            marginTop: '8px',
+                                            cursor: 'pointer',
+                                            textDecoration: 'underline',
+                                            fontSize: '0.9rem'
+                                        }}
+                                    >
+                                        Șterge din coș
+                                    </button>
                                 </div>
                             </div>
                             <div className="cart-item-price">
@@ -67,13 +85,16 @@ const Cart = () => {
                         <span>{cartTotal} MDL</span>
                     </div>
 
-                    {/* AICI ESTE BUTONUL NOU, CARE TE DUCE LA PAGINA DE CHECKOUT */}
                     <Link to="/checkout" className="btn btn-primary checkout-btn" style={{ display: 'block', textAlign: 'center', boxSizing: 'border-box' }}>
                         Finalizează Comanda
                     </Link>
 
                 </div>
             </div>
+
+            {/* Secțiunea de recomandări plasată sub coș */}
+            <RecommendedProducts />
+
         </div>
     );
 };

@@ -1,178 +1,152 @@
-.shop-container {
-    padding: 1rem 0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
 
-.shop-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: var(--color-primary);
-}
-
-.shop-status {
-    text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: var(--color-text-light);
-}
-
-/* Grila CSS inteligentă: pe telefon pune 1 produs/rând, pe PC pune 3 sau 4 */
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-}
-
-/* Designul cardului de produs */
-.product-card {
-    background: var(--color-surface);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px); /* Se ridică ușor când pui mouse-ul */
-}
-
-/* Spațiul unde va veni poza */
-.product-image-placeholder {
-    height: 250px;
-    background-color: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 0.9rem;
-}
-
-.product-details {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1; /* Împinge partea de jos mereu la baza cardului */
-}
-
-.product-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.product-desc {
-    color: var(--color-text-light);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-    flex: 1;
-}
-
-.product-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-}
-
-.product-price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-accent);
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-}
-
-
-/* Stiluri noi pentru imaginile reale ale produselor */
-.product-image-container {
-    height: 250px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #ffffff;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Păstrează proporțiile pozei fără să o taie */
-    transition: transform 0.4s ease;
-}
-
-/* Facem un mic efect de zoom pe poză când pui mouse-ul pe card */
-.product-card:hover .product-image {
-    transform: scale(1.05);
-}
-
+/* ==========================================================================
+   SHOP - EDITORIAL / LUXURY FASHION
+   Palette: ivory #f6f3ee, ink #16140f, bronze #8a6f4d
+   ========================================================================== */
 
 .shop-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
+    --ivory: #f6f3ee;
+    --stone: #e8e2d8;
+    --ink: #16140f;
+    --muted: #7a7469;
+    --line: #d9d2c5;
+    --bronze: #8a6f4d;
+    --ok: #3f5d46;
+    --danger: #9b3b30;
+
+    background-color: var(--ivory);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 clamp(1.25rem, 4vw, 4rem) 6rem;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* ---------- HEADER ---------- */
 .shop-header {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: clamp(4rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem);
     text-align: center;
-    margin-bottom: 3rem;
+}
+
+.shop-eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 1.5rem;
 }
 
 .shop-header h1 {
-    font-size: 2.5rem;
-    color: var(--color-primary);
-    margin-bottom: 0.5rem;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.5rem;
 }
 
 .shop-header p {
-    color: #6b7280;
-    font-size: 1.1rem;
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
 }
 
-/* Grila de produse (Responsive) */
+/* ---------- TOOLBAR ---------- */
+.shop-toolbar {
+    max-width: 1500px;
+    margin: 0 auto 3rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.shop-count {
+    color: var(--muted);
+}
+
+.shop-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted);
+}
+
+.shop-sort select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    padding: 0.25rem 1.4rem 0.25rem 0;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--ink);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2316140f' stroke-width='1.2'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.shop-sort select:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 4px;
+}
+
+/* ---------- GRID ---------- */
 .products-grid {
+    max-width: 1500px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 4rem 1.75rem;
 }
 
-/* Cardul unui produs */
+/* ---------- CARD ---------- */
 .product-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: card-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
+@keyframes card-in {
+    to { opacity: 1; transform: none; }
 }
 
-/* Imaginea produsului */
 .product-image-container {
-    width: 100%;
-    aspect-ratio: 4/5; /* Proporție clasică pentru haine */
-    background-color: #f3f4f6;
-    overflow: hidden;
     position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: var(--stone);
+    overflow: hidden;
 }
 
 .product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    display: block;
+    transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .product-card:hover .product-image {
-    transform: scale(1.05); /* Efect de zoom fin la trecerea cu mouse-ul */
+    transform: scale(1.045);
 }
 
 .no-image {
@@ -181,48 +155,150 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
-    font-weight: 500;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.15rem;
+    font-style: italic;
 }
 
-/* Informațiile de sub imagine */
+/* Buton rapid: apare peste imagine la hover */
+.add-to-cart-btn {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 1rem;
+    border: none;
+    background: var(--ink);
+    color: var(--ivory);
+    font: 500 0.72rem 'Inter', system-ui, sans-serif;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: translateY(calc(100% + 1rem));
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 0.25s ease;
+}
+
+.product-card:hover .add-to-cart-btn,
+.product-card:focus-within .add-to-cart-btn,
+.add-to-cart-btn.is-visible {
+    transform: translateY(0);
+}
+
+.add-to-cart-btn:hover {
+    background: var(--bronze);
+}
+
+.add-to-cart-btn:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+}
+
+.add-to-cart-btn.is-added {
+    background: var(--ok);
+}
+
+.add-to-cart-btn.is-error {
+    background: var(--danger);
+}
+
+/* ---------- INFO ---------- */
 .product-info {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    padding-top: 1.1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 1rem;
+    row-gap: 0.45rem;
+    align-items: baseline;
 }
 
 .product-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.5rem;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
 }
 
 .product-price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    margin-bottom: 1.5rem;
-    flex-grow: 1; /* Împinge butonul la baza cardului */
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin: 0;
+    white-space: nowrap;
 }
 
-.add-to-cart-btn {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border-radius: var(--radius);
+.product-description {
+    grid-column: 1 / -1;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-/* Stări de încărcare și eroare */
-.shop-loader, .shop-error, .no-products {
+/* ---------- SKELETON ---------- */
+.skeleton-card .skeleton-image,
+.skeleton-card .skeleton-line {
+    background: linear-gradient(90deg, var(--stone) 0%, #f0ebe2 50%, var(--stone) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-image { aspect-ratio: 3 / 4; }
+.skeleton-line { height: 12px; margin-top: 1rem; width: 60%; }
+.skeleton-line.short { width: 30%; }
+
+@keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+/* ---------- STARI ---------- */
+.shop-error,
+.no-products {
+    max-width: 1500px;
+    margin: 0 auto;
     text-align: center;
-    padding: 5rem 0;
-    font-size: 1.2rem;
-    color: #6b7280;
+    padding: 8rem 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--muted);
 }
 
-.shop-error {
-    color: #ef4444;
+.shop-error { color: var(--danger); }
+
+/* ---------- RESPONSIVE ---------- */
+/* Pe touch nu exista hover: butonul ramane vizibil sub imagine */
+@media (hover: none) {
+    .add-to-cart-btn {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem 1rem;
+    }
+    .product-name { font-size: 1.1rem; }
+    .product-info { grid-template-columns: 1fr; }
+    .shop-toolbar { flex-direction: column; align-items: flex-start; }
+    .add-to-cart-btn { padding: 0.8rem 0.5rem; letter-spacing: 0.14em; }
+}
+
+@media (max-width: 420px) {
+    .products-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-card { animation: none; opacity: 1; transform: none; }
+    .product-image, .add-to-cart-btn { transition: none; }
+    .skeleton-card .skeleton-image,
+    .skeleton-card .skeleton-line { animation: none; }
 }
