@@ -6,7 +6,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js'; // IMPORT NOU
+import paymentRoutes from './routes/paymentRoutes.js';
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/payment', paymentRoutes); // RUTA NOUĂ
+app.use('/api/payment', paymentRoutes);
 
 app.get('/', (req, res) => {
     res.send('Serverul Magazinului funcționează!');

@@ -5,6 +5,6 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.post('/create-checkout-session', verifyToken, createCheckoutSession);
-router.post('/success', verifyToken, markOrderAsPaid);
+router.post('/mark-as-paid', verifyToken, markOrderAsPaid);
 
 export default router;

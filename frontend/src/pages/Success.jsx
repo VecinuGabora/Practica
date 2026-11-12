@@ -13,7 +13,7 @@ const Success = () => {
         const confirmPayment = async () => {
             if (orderId) {
                 try {
-                    await API.post('/payment/success', { orderId });
+                    await API.post('/payment/mark-as-paid', { orderId });
                     await fetchCart(); // Golim coșul
                     setStatus('Plata a fost confirmată cu succes!');
                 } catch (error) {
