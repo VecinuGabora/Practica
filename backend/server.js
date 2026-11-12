@@ -12,7 +12,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://practica-frontend-rho.vercel.app'],
+    credentials: true
+}));
 app.use(express.json());
 
 // Rute

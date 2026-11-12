@@ -32,8 +32,8 @@ export const createCheckoutSession = async (req, res) => {
                     quantity: 1,
                 },
             ],
-            success_url: `http://localhost:5173/success?order_id=${orderId}`,
-            cancel_url: `http://localhost:5173/checkout`,
+            success_url: `https://practica-frontend-rho.vercel.app/success?order_id=${orderId}`,
+            cancel_url: `https://practica-frontend-rho.vercel.app/checkout`,
         });
 
         res.status(200).json({ url: session.url });
