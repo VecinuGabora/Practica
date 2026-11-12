@@ -59,7 +59,7 @@ export const getProducts = async (req, res) => {
     }
 };
 
-// 3. Ștergerea unui produs (Admin)
+// 3. Ștergerea unui produs (Admin) - Actualizat pentru a preveni Eroarea 500 (Foreign Key)
 export const deleteProduct = async (req, res) => {
     const { id } = req.params;
     const connection = await db.getConnection();
@@ -67,6 +67,21 @@ export const deleteProduct = async (req, res) => {
     try {
         await connection.beginTransaction();
 
+        // 1. Identificăm toate variantele (mărimi/culori) acestui produs
+        const [variants] = await connection.query('SELECT id FROM product_variants WHERE product_id = ?', [id]);
+
+        if (variants.length > 0) {
+            // Extragem doar ID-urile variantelor într-un array
+            const variantIds = variants.map(v => v.id);
+
+            // 2. Ștergem produsul din toate coșurile de cumpărături active (cart_items)
+            await connection.query('DELETE FROM cart_items WHERE product_variant_id IN (?)', [variantIds]);
+
+            // 3. Ștergem produsul din comenzile plasate (order_items)
+            await connection.query('DELETE FROM order_items WHERE product_variant_id IN (?)', [variantIds]);
+        }
+
+        // 4. Acum putem șterge în siguranță baza produsului (imagini, variante, produs)
         await connection.query('DELETE FROM product_images WHERE product_id = ?', [id]);
         await connection.query('DELETE FROM product_variants WHERE product_id = ?', [id]);
         await connection.query('DELETE FROM products WHERE id = ?', [id]);

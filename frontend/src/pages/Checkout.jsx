@@ -5,11 +5,11 @@ import { useCart } from '../hooks/useCart.js';
 import '../styles/Checkout.css';
 
 const Checkout = () => {
-    // Stările pentru formularul de adresă
     const [street, setStreet] = useState('');
     const [city, setCity] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('Moldova');
+    const [paymentMethod, setPaymentMethod] = useState('ramburs'); // NOU: Starea pentru metoda de plată
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -17,7 +17,6 @@ const Checkout = () => {
     const { cartTotal, fetchCart, cartItems } = useCart();
     const navigate = useNavigate();
 
-    // Dacă încearcă să intre pe checkout cu coșul gol, îl trimitem la magazin
     if (cartItems.length === 0) {
         navigate('/magazin');
         return null;
@@ -29,31 +28,35 @@ const Checkout = () => {
         setError('');
 
         try {
-            // 1. Salvăm adresa în baza de date
+            // 1. Salvăm adresa
             const addressResponse = await API.post('/orders/address', {
-                street,
-                city,
-                zip_code: zipCode,
-                country
+                street, city, zip_code: zipCode, country
             });
-
             const addressId = addressResponse.data.addressId;
 
-            // 2. Plasăm comanda folosind ID-ul adresei tocmai create
-            await API.post('/orders', {
+            // 2. Plasăm comanda
+            const orderResponse = await API.post('/orders', {
                 shipping_address_id: addressId
             });
+            const { orderId, total } = orderResponse.data;
 
-            // 3. Reîncărcăm coșul (care acum va fi gol pentru că serverul l-a șters)
-            await fetchCart();
-
-            // 4. Afișăm un mesaj de succes și ducem clientul pe pagina principală
-            alert('Felicitări! Comanda a fost plasată cu succes!');
-            navigate('/');
+            // 3. Verificăm metoda de plată
+            if (paymentMethod === 'stripe') {
+                // Dacă e Stripe, cerem URL-ul de plată și redirecționăm
+                const stripeResponse = await API.post('/payment/create-checkout-session', {
+                    orderId: orderId,
+                    totalAmount: total
+                });
+                window.location.href = stripeResponse.data.url; // Redirecționare către Stripe
+            } else {
+                // Dacă e Ramburs, terminăm fluxul clasic
+                await fetchCart();
+                alert('Felicitări! Comanda a fost plasată cu succes (Plată la livrare).');
+                navigate('/');
+            }
 
         } catch (err) {
             setError(err.response?.data?.message || 'A apărut o eroare la procesarea comenzii.');
-        } finally {
             setIsLoading(false);
         }
     };
@@ -69,50 +72,54 @@ const Checkout = () => {
                 <form onSubmit={handleCheckout} className="checkout-form">
                     <div className="form-group">
                         <label>Strada și numărul</label>
-                        <input
-                            type="text"
-                            required
-                            value={street}
-                            onChange={(e) => setStreet(e.target.value)}
-                            placeholder="ex: Str. Studenților 9/7"
-                        />
+                        <input type="text" required value={street} onChange={(e) => setStreet(e.target.value)} />
                     </div>
 
                     <div className="form-row">
                         <div className="form-group">
                             <label>Oraș</label>
-                            <input
-                                type="text"
-                                required
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                                placeholder="ex: Chișinău"
-                            />
+                            <input type="text" required value={city} onChange={(e) => setCity(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label>Cod Poștal</label>
-                            <input
-                                type="text"
-                                required
-                                value={zipCode}
-                                onChange={(e) => setZipCode(e.target.value)}
-                                placeholder="ex: MD-2045"
-                            />
+                            <input type="text" required value={zipCode} onChange={(e) => setZipCode(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="form-group">
                         <label>Țara</label>
-                        <input
-                            type="text"
-                            required
-                            value={country}
-                            onChange={(e) => setCountry(e.target.value)}
-                        />
+                        <input type="text" required value={country} onChange={(e) => setCountry(e.target.value)} />
                     </div>
 
-                    <button type="submit" className="btn btn-primary checkout-submit-btn" disabled={isLoading}>
-                        {isLoading ? 'Se procesează...' : 'Confirmă Comanda'}
+                    {/* SELECTOR METODĂ DE PLATĂ */}
+                    <div className="form-group" style={{ marginTop: '1.5rem', borderTop: '1px solid #e5e7eb', paddingTop: '1.5rem' }}>
+                        <label style={{ fontSize: '1.1rem', marginBottom: '1rem', display: 'block' }}>Metodă de plată</label>
+                        <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                <input
+                                    type="radio"
+                                    name="payment"
+                                    value="ramburs"
+                                    checked={paymentMethod === 'ramburs'}
+                                    onChange={(e) => setPaymentMethod(e.target.value)}
+                                />
+                                Plată la livrare (Ramburs)
+                            </label>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                <input
+                                    type="radio"
+                                    name="payment"
+                                    value="stripe"
+                                    checked={paymentMethod === 'stripe'}
+                                    onChange={(e) => setPaymentMethod(e.target.value)}
+                                />
+                                Plată cu Cardul (Securizat prin Stripe)
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary checkout-submit-btn" disabled={isLoading} style={{ marginTop: '2rem' }}>
+                        {isLoading ? 'Se procesează...' : (paymentMethod === 'stripe' ? 'Plătește online' : 'Confirmă Comanda')}
                     </button>
                 </form>
             </div>
