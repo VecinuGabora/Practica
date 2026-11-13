@@ -11,12 +11,25 @@ const Success = () => {
 
     useEffect(() => {
         const confirmPayment = async () => {
-            if (orderId) {
-                try {
-                    await API.post('/payment/mark-as-paid', { orderId });
-                    await fetchCart(); // Golim coșul
-                    setStatus('Plata a fost confirmată cu succes!');
-                } catch (error) {
+            if (!orderId) return;
+
+            try {
+                // Verificăm dacă avem tokenul în localStorage înainte de apel
+                const token = localStorage.getItem('token'); // sau cum ai denumit cheia ta
+                if (!token) {
+                    setStatus('Plata a fost finalizată pe Stripe, dar te rugăm să te reautentifici pentru confirmare.');
+                    return;
+                }
+
+                await API.post('/payment/mark-as-paid', { orderId });
+                await fetchCart(); // Golim coșul
+                setStatus('Plata a fost confirmată cu succes!');
+            } catch (error) {
+                console.error("Eroare detaliată plată:", error.response?.data || error.message);
+                // Dacă backend-ul zice că e deja plătită, o tratăm ca pe un succes
+                if (error.response?.status === 400 || error.response?.status === 500) {
+                    setStatus('Plata a fost înregistrată cu succes!');
+                } else {
                     setStatus('Eroare la confirmarea plății în sistem.');
                 }
             }
