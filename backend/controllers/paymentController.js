@@ -48,9 +48,10 @@ export const markOrderAsPaid = async (req, res) => {
     const userId = req.user.id;
 
     try {
+
         await db.query(
-            'UPDATE orders SET status = "Plătit Online (Stripe)" WHERE id = ? AND user_id = ?',
-            [orderId, userId]
+            'UPDATE orders SET status = ? WHERE id = ? AND user_id = ?',
+            ['Plătit Online (Stripe)', orderId, userId]
         );
         res.status(200).json({ message: 'Comanda a fost marcată ca plătită.' });
     } catch (error) {
